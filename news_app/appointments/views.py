@@ -24,8 +24,8 @@ class AppointView(View):
         if pole_test2:
             pole_test2 = pole_test2
         # else:
-            # предыдущия неделя находится так
-            # pole_test2 = datetime.now().isocalendar()[1] - 1
+        # предыдущия неделя находится так
+        # pole_test2 = datetime.now().isocalendar()[1] - 1
 
         pole_spisok1 = Category.objects.get(pk=pole_test)
 
@@ -49,8 +49,9 @@ class AppointView(View):
             news_from_each_category = []
 
             for news in Post.objects.filter(category_id=category.id,
-                                           dateCreation__week=datetime.now().isocalendar()[1] - 1).values('pk', 'title',
-                                                                                                        'dateCreation'):
+                                            dateCreation__week=datetime.now().isocalendar()[1] - 1).values('pk',
+                                                                                                           'title',
+                                                                                                           'dateCreation'):
                 new = (f'{news.get("title")}, {news.get("dateCreation")}, http://127.0.0.1:8000/news/{news.get("pk")}')
                 news_from_each_category.append(new)
             print("Письма отправлены подписчикам категории:", category.id, category.name)
@@ -61,11 +62,6 @@ class AppointView(View):
             for wsx in qwe:
                 print('Новости отправлены на', wsx.email)
 
-
-
-
-
-
         return render(request, 'test_test.html', {
             'pole_test_html': pole_test,
             'pole_test_html2': pole_test2,
@@ -74,59 +70,6 @@ class AppointView(View):
             # "pole_spisok_html3": pole_spisok3,
             # "news_by_category": news_from_category,
         })
-
-
-
-
-
-        # print('pole_spisok3:', pole_spisok3)
-        # print('Список статей на данную тему:')
-        # pole_spisok4 = f'{qaz}, http://127.0.0.1:8000/news/{wsx}'
-        # print('Список статей на данную тему:', pole_spisok4)
-
-        # print(request)
-        # print(dir(request))
-        # print(request.POST['pole_test'])
-        #     print(qwer.get('title'), 'http://127.0.0.1:8000/news/', qwer.get('pk'), )
-        # получаем список адресов в зависимости от pk=pole_test
-        # # pole_spisok2 = list(Category.objects.filter(pk=pole_test).values('subscribers__email'))
-        # в данном цикле мы можем отправлять каждому пользователю или подписчику под данную категорию нужный список
-        # статей, следующий этап сформировать список статей в шаблоне html
-        # for qwe in pole_spisok2:
-        #     print(qwe.get('subscribers__email',))
-
-        # return redirect ('test')
-        # pole_spisok2 = list(Category.objects.filter(pk=pole_test).values('subscribers__username', 'subscribers__email'))
-        # print(type(pole_spisok1))
-        # выывести список подписоты одной статьи (их мыло)
-
-        # category = Category.objects.get(pk=Post.objects.get(pk=instance.pk).category.pk)
-        # subscribers = category.subscribers.all()
-
-        # print('Сообщение:', pole_test)
-
-        # subscribers = Category.objects.filter(pk=cat_id).values('subscribers__email')
-        # subscribers = Category.objects.all().values('subscribers', 'subscribers__username', 'name', 'subscribers__email')
-        # category = Category.objects.get(pk=Post.objects.get(pk=Post.pk).category.pk)
-        # subscribers = category.subscribers.all()
-
-        # for subscriber in subscribers:
-        #     print('Адреса рассылки:', subscriber.email)
-
-        # for qaz in subscribers:
-        #     # print("имя:", qaz)
-        #     print("только почта:", qaz.email)
-        #     # print("ИД:", qaz.id)
-
-        # print(subscribers)
-        # subscribers = Category.objects.all()
-
-        # for qwe in subscribers:
-        #     print(qwe)
-        # categorys = Category.objects.all().values('subscribers', 'subscribers__username', 'name', 'subscribers__email')
-        # return render(request, 'test_test.html', {
-        #     'subs': categorys  # чтоб получить все значения из БД будем проходиться циклом в html страничке
-        # })
 
 
 class AppointmentView(View):
@@ -146,10 +89,6 @@ class AppointmentView(View):
         # переход на данную форму (представление) после выполнения кода
         return redirect('make_appointment')  # (1)
 
-#
-#
-#
-#
 #
 # (1)
 # return redirect - дословно означает, что мы должны сделать после выполнения данной функции (def post)

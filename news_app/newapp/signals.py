@@ -53,7 +53,7 @@ def send_sub_mail(sender, instance, created, **kwargs):
 
         msg.attach_alternative(html_content, 'text/html')
 
-        # для удобства вывода инфы в консоль, никакой важной функции не несет
+        # для удобства вывода инфы в консоль
         print()
         print(html_content)
         print()

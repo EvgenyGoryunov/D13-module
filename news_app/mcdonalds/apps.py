@@ -2,12 +2,9 @@ from django.apps import AppConfig
 import redis
 
 
-class NewappConfig(AppConfig):
+class McdonaldsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'newapp'
-
-    def ready(self):
-        import newapp.signals
+    name = 'mcdonalds'
 
 
 red = redis.Redis(

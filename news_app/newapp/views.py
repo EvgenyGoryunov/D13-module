@@ -1,13 +1,18 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin  # модуль Д5, чтоб ограничить права доступа
-from django.core.mail import EmailMultiAlternatives
-from django.shortcuts import redirect
-from django.template.loader import render_to_string
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 
-from .filters import NewsFilter  # фильтр (с файла filters.py)
+from .filters import NewsFilter
 from .forms import NewsForm
 from .models import Post, Category
+
+# from mcdonalds.tasks import hello
+#
+#
+# def index(request):
+#     hello.delay()
+#     return render(request, 'news_list.html')
 
 
 # дженерик для главной страницы
@@ -67,50 +72,8 @@ class NewsAdd(CreateView):
     form_class = NewsForm
     success_url = '/news/'
 
-    # Первый способ отправки сообщений подписчику (второй через сигналы сделан)
-    # def post(self, request, *args, **kwargs):
-    #     form = NewsForm(request.POST)
-    #     # category_pk = request.POST['category'] # либо так можно, либо как ниже
-    #     category_pk = request.POST.get('category')
-    #     sub_text = request.POST.get('text')
-    #     sub_title = request.POST.get('title')
-    #     category = Category.objects.get(pk=category_pk)
-    #     subscribers = category.subscribers.all()
-    #     # получаем адрес хоста и порта (в нашем случае 127.0.0.1:8000), чтоб в дальнейшем указать его в ссылке
-    #     # в письме, чтоб пользователь мог с письма переходить на наш сайт, на конкретную новость
-    #     host = request.META.get('HTTP_HOST')
-    #
-    #
-    #     # валидатор - чтоб данные в форме были корректно введены, без вредоносного кода от хакеров и прочего
-    #     if form.is_valid():
-    #         news = form.save(commit=False)
-    #         news.save()
-    #         print('Статья:', news)
-    #
-    #     for subscriber in subscribers:
-    #         # print('Адреса рассылки:', subscriber.email)
-    #
-    #         # (6)
-    #         html_content = render_to_string(
-    #             'mail_sender.html', {'user': subscriber, 'text': sub_text[:50], 'post': news, 'host': host})
-    #
-    #         # (7)
-    #         msg = EmailMultiAlternatives(
-    #             # Заголовок письма, тема письма
-    #             subject=f'Здравствуй, {subscriber.username}. Новая статья в вашем разделе!',
-    #             # Наполнение письма
-    #             body=f'{sub_text[:50]}',
-    #             # От кого письмо (должно совпадать с реальным адресом почты)
-    #             from_email='factoryskill@yandex.ru',
-    #             # Кому отправлять, конкретные адреса рассылки, берем из переменной, либо можно явно прописать
-    #             to=[subscriber.email],
-    #         )
-    #
-    #         msg.attach_alternative(html_content, "text/html")
-    #         print(html_content)
-    #         msg.send()
-    #
-        # return redirect('/news/')
+
+# (0)
 
 
 # дженерик для редактирования объекта
@@ -205,114 +168,48 @@ class DeleteNews(PermissionRequiredMixin, NewsDelete):
 # Существует определенное соглашение для именования разрешений: <app>.<action>_<model>, пример 'newapp.add_post'
 # После того, как мы написали наши ограничения, нужно в urls изменить выводы преставлений, указав на новые
 #
-#
-#
-#
-#
-#
-#
-# print('user:', x.name, ', x.email:', x.email, ', x.id:', x.id,)
-# print("category:", category)
-# subscribers = list(category.subscribers.all().values("email"))
-# print('subscribers:', subscribers)
-# print('subscribers_type:', type(subscribers))
-# print('x:', dir(subscribers))
-#
-#
-#
-# print(request.POST)
-# print(request.POST.get('category'))
-# print("xxxx", x)
-# print("cat", cat)
-#
-# def get(self, request, **kwargs):
-#     return render(request, 'news_list.html', {context})
-# return render(request, 'news_list.html', {context})
-#
-# def get(self, request, *args, **kwargs):
-#     self.object = None
-#     return super().get(request, *args, **kwargs)
-#
+# (0)
+# Первый способ отправки сообщений подписчику (второй через сигналы сделан)
 # def post(self, request, *args, **kwargs):
-#     self.object = None
-#     return super().post(request, *args, **kwargs)
+#     form = NewsForm(request.POST)
+#     # category_pk = request.POST['category'] # либо так можно, либо как ниже
+#     category_pk = request.POST.get('category')
+#     sub_text = request.POST.get('text')
+#     sub_title = request.POST.get('title')
+#     category = Category.objects.get(pk=category_pk)
+#     subscribers = category.subscribers.all()
+#     # получаем адрес хоста и порта (в нашем случае 127.0.0.1:8000), чтоб в дальнейшем указать его в ссылке
+#     # в письме, чтоб пользователь мог с письма переходить на наш сайт, на конкретную новость
+#     host = request.META.get('HTTP_HOST')
 #
 #
+#     # валидатор - чтоб данные в форме были корректно введены, без вредоносного кода от хакеров и прочего
+#     if form.is_valid():
+#         news = form.save(commit=False)
+#         news.save()
+#         print('Статья:', news)
 #
-# def add_subscribe(request, **kwargs):
-#     GET = request.GET
-#     # pk = kwargs.get('pk_pk')
-#     # id = kwargs.get('post.id')
-#     pk = request.GET.get('pk_pk')
-#     # qwerty = request.GET.get("id", "pk")
-#     # print("GET:", dir(request))
-#     print("GET:", GET)
-#     print("ПиКей:", pk)
-#     # print("IdIdId:", id)
-#     # print("qwerty:", qwerty)
+#     for subscriber in subscribers:
+#         # print('Адреса рассылки:', subscriber.email)
 #
-#     # print(request.pk)
-#     # print("ЮЗЕР:", request.user)
-#     Category.objects.get(pk=Post.objects.get(pk=pk).category.id).subscribers.add(request.user)
-#     # Category.objects.get(pk=Post.objects.get(pk=id).category.id).subscribers.add(request.user)
-#     return redirect('/news/')
-
-
-# def add_subscribe(request, **kwargs):
-#     pk = request.GET.get('pk')
-#     print(pk)
-#     Category.objects.get(pk=Post.objects.get(pk=pk).category.id).subscribers.add(request.user)
-#     return redirect('/news/')
-
+#         # (6)
+#         html_content = render_to_string(
+#             'mail_sender.html', {'user': subscriber, 'text': sub_text[:50], 'post': news, 'host': host})
 #
-# def subscribe():
-#     return redirect('/news/')
-
-
-# def get_object(self, **kwargs):  # (4)
-# id = self.kwargs.get('pk')
-# print("id поста:", id)
-# print("id категории:", Post.objects.get(pk=id).category.id)
-# print("Название категории:", Post.objects.get(pk=id).category)
-# return Post.objects.get(pk=id).category.id
-# qaz=Post.objects.get(pk=id)
-# return id
-# return Post.objects.get(pk=id)
-
-# print("id поста:", get_object)
-
-# def qaz(self, get_object):
-#     print("Функция гет гет:", Post.objects.get(pk=get_object).category)
-#     return Post.objects.get(pk=get_object).category.id
-
-
-# print(Category.objects.get(pk=3).name)
-
-# print(Category.objects.filter(pk=id).values("id", "name", "subscribers"))
-# print(Category.objects.filter(name='IT').values("subscribers"))
-# print(kp=id)
-# print("Name:", self.request.user)
-# print("User ID:", self.request.user.id)
-# print("User Test:", Post.objects.all())
-# print(Category.name.id)
-# print(Category.name)
-# print(Category.objects.get(pk=1).values('name'))
-
-# print('pk:', id)
-# print(type(id))
-# print(id)
-
-# print(Category.objects.filter(pk=2).values("id", "name", "subscribers__username"))
-
-# print(Post.objects.get(pk=id).values("category"))
-# print(Post.objects.get(pk=id).category.id)
-
-# print(Category.objects.filter(pk=Post.objects.get(pk=id).category.id).values("id", "name", "subscribers__username"))
-
-# print(Category.objects.filter(pk=Post.objects.get(pk=id).category.id).values("subscribers__username"))
-# print(self.request.user)
-
-# print(context['is_not_subscribe'])
-# print(context['is_subscribe'])
-
-
+#         # (7)
+#         msg = EmailMultiAlternatives(
+#             # Заголовок письма, тема письма
+#             subject=f'Здравствуй, {subscriber.username}. Новая статья в вашем разделе!',
+#             # Наполнение письма
+#             body=f'{sub_text[:50]}',
+#             # От кого письмо (должно совпадать с реальным адресом почты)
+#             from_email='factoryskill@yandex.ru',
+#             # Кому отправлять, конкретные адреса рассылки, берем из переменной, либо можно явно прописать
+#             to=[subscriber.email],
+#         )
+#
+#         msg.attach_alternative(html_content, "text/html")
+#         print(html_content)
+#         msg.send()
+#
+# return redirect('/news/')

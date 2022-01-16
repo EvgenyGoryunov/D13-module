@@ -50,6 +50,16 @@ INSTALLED_APPS = [
     'appointments.apps.AppointmentConfig',
     'django_apscheduler',
 
+    # модуль Д7
+
+
+    # сделать под свое
+    # 'news_app'
+    # 'newapp.apps.newappConfig',
+    # 'newspaper.apps.NewspaperConfig',
+    'mcdonalds'
+
+
 ]
 
 DEFAULT_FROM_EMAIL = 'factoryskill@yandex.ru'
@@ -68,6 +78,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #
+    # 'basic.middlewares.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -133,6 +147,16 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# LOCALE_PATHS = [
+#     os.path.join(BASE_DIR, 'locale')
+# ]
+
+# LANGUAGES = [
+#     ('ru', 'Русский'),
+#     ('en', 'English'),
+# ]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -220,7 +244,23 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
 
 
+# Celery
+# указывает на URL брокера сообщений (Redis). По умолчанию он находится на порту 6379
+CELERY_BROKER_URL = 'redis://localhost:6379'
+# куда будут отправляться все данные, указывает на хранилище результатов выполнения зада
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+# формат наших данных,
+CELERY_ACCEPT_CONTENT = ['application/json']
+# формат данных, метод сериализации задач
+CELERY_TASK_SERIALIZER = 'json'
+# формат данных, метод сериализации результатов
+CELERY_RESULT_SERIALIZER = 'json'
 
+
+
+# INTERNAL_IPS = [
+#     '127.0.0.1',
+# ]
 
 
 #

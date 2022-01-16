@@ -35,4 +35,7 @@ urlpatterns = [
     path('pages/', include('django.contrib.flatpages.urls')),
     path('news/', include('newapp.urls')),
 
+    # модуль Д7 - таски и педис
+    path('mcd/', include('mcdonalds.urls')),
+
 ]
