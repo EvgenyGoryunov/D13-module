@@ -11,6 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ih%n$n4g-&dyjs0nlo1u^+=6^@q!mtqmka8hy8r+r1lmpb6f5t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = False
 DEBUG = True
 
 # Модуль Д5
@@ -244,12 +245,23 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
 
 
-# Celery
+# Модуль Д7 - Celery,Redis
 # указывает на URL брокера сообщений (Redis). По умолчанию он находится на порту 6379
-CELERY_BROKER_URL = 'redis://localhost:6379'
-# куда будут отправляться все данные, указывает на хранилище результатов выполнения зада
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-# формат наших данных,
+# чтоб настроить правильную работу для винды среды
+# заменяем это (см ниже)
+# CELERY_BROKER_URL = 'redis://localhost:6379'
+# по такому правилу
+# redis://:password@hostname:port/db_number
+# db_number = 0, обязательно, иначе ошибки будут
+# на это
+CELERY_BROKER_URL = 'redis://:SLltAfLjaeIah58aXZBP6rICl6g60J2N@redis-16974.c258.us-east-1-4.ec2.cloud.redislabs.com:16974/0'
+
+# куда будут отправляться все данные, указывает на хранилище результатов выполнения задач
+# заменяем это
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+# на это
+CELERY_RESULT_BACKEND = 'redis://:SLltAfLjaeIah58aXZBP6rICl6g60J2N@redis-16974.c258.us-east-1-4.ec2.cloud.redislabs.com:16974/0'
+# формат наших данных
 CELERY_ACCEPT_CONTENT = ['application/json']
 # формат данных, метод сериализации задач
 CELERY_TASK_SERIALIZER = 'json'
@@ -257,15 +269,6 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 
-
-# INTERNAL_IPS = [
-#     '127.0.0.1',
-# ]
-
-
-#
-#
-#
 # (1)
 # Первые два указывают на то, что поле email является обязательным и уникальным, а третий, наоборот, говорит,
 # что username теперь необязательный. Следующий параметр указывает, что аутентификация будет происходить

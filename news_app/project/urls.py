@@ -36,6 +36,6 @@ urlpatterns = [
     path('news/', include('newapp.urls')),
 
     # модуль Д7 - таски и педис
-    path('mcd/', include('mcdonalds.urls')),
+    path('mcdonalds/', include('mcdonalds.urls')),
 
 ]

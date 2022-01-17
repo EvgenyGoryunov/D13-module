@@ -7,14 +7,6 @@ from .filters import NewsFilter
 from .forms import NewsForm
 from .models import Post, Category
 
-# from mcdonalds.tasks import hello
-#
-#
-# def index(request):
-#     hello.delay()
-#     return render(request, 'news_list.html')
-
-
 # дженерик для главной страницы
 class NewsList(ListView):
     model = Post  # (2)
@@ -98,7 +90,7 @@ class NewsDelete(DeleteView):
 @login_required
 def add_subscribe(request, **kwargs):
     pk = request.GET.get('pk', )
-    print('Пользователь', request.user, 'добавлен в подписчики категории:', Category.objects.get(pk=pk))
+    # print('Пользователь', request.user, 'добавлен в подписчики категории:', Category.objects.get(pk=pk))
     Category.objects.get(pk=pk).subscribers.add(request.user)
     return redirect('/news/')
 
