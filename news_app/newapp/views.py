@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin  # модуль Д5, чтоб ограничить права доступа
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 
 from .filters import NewsFilter
@@ -116,8 +118,7 @@ class ChangeNews(PermissionRequiredMixin, NewsEdit):
 
 class DeleteNews(PermissionRequiredMixin, NewsDelete):
     permission_required = ('newapp.delete_post',)
-#
-#
+
 #
 #
 #
