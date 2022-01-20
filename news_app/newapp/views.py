@@ -9,12 +9,10 @@ from .filters import NewsFilter
 from .forms import NewsForm
 from .models import Post, Category
 
+from .tasks import send_mail_for_sub_once
 
 
 # дженерик для главной страницы
-from .tasks import send_mail_for_sub_test
-
-
 class NewsList(ListView):
     model = Post  # (2)
     template_name = 'news_list.html'
@@ -175,7 +173,8 @@ def send_mail_for_sub(instance):
         print(html_content)
         print()
 
-        send_mail_for_sub_test.delay(sub_username, sub_useremail, html_content)
+        # фукнция для таски, передаем в нее все что нужно для отправки подписчикам письма
+        send_mail_for_sub_once.delay(sub_username, sub_useremail, html_content)
 
 
 

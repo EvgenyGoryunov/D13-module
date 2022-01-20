@@ -1,19 +1,16 @@
 import logging
-
-from django.conf import settings
+from datetime import datetime
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
-from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django_apscheduler.jobstores import DjangoJobStore
 from django_apscheduler.models import DjangoJobExecution
 
-from datetime import datetime
-
 from newapp.models import Category, Post
-
+from newapp.tasks import send_mail_for_sub_every_week
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +44,6 @@ def news_sender():
                                                                                     'title',
                                                                                     'dateCreation',
                                                                                     'category_id__name'):
-
             # преобразуем дату в человеческий вид - убираем секунды и прочую хрень
             date_format = news.get("dateCreation").strftime("%m/%d/%Y")
 
@@ -91,13 +87,18 @@ def news_sender():
                                      'category_name': category.name,
                                      'week_number_last': week_number_last})
 
-            msg = EmailMultiAlternatives(
-                subject=f'Здравствуй, {subscriber.username}, новые статьи за прошлую неделю в вашем разделе!',
-                from_email='factoryskill@yandex.ru',
-                to=[subscriber.email]
-            )
+            sub_username = subscriber.username
+            sub_useremail = subscriber.email
 
-            msg.attach_alternative(html_content, 'text/html')
+            send_mail_for_sub_every_week(sub_username, sub_useremail, html_content)
+
+            # msg = EmailMultiAlternatives(
+            #     subject=f'Здравствуй, {subscriber.username}, новые статьи за прошлую неделю в вашем разделе!',
+            #     from_email='factoryskill@yandex.ru',
+            #     to=[subscriber.email]
+            # )
+
+            # msg.attach_alternative(html_content, 'text/html')
             print()
 
             # для удобства в консоль выводим содержимое нашего письма, в тестовом режиме проверим, что и
@@ -114,6 +115,7 @@ def news_sender():
 # функция, которая будет удалять неактуальные задачи
 def delete_old_job_executions(max_age=604_800):
     DjangoJobExecution.objects.delete_old_job_executions(max_age)
+
 
 class Command(BaseCommand):
     help = "Runs apscheduler."
