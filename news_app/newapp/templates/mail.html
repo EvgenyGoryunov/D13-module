@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Новая статья от автора {{ post.author }} из категории {{ post.category }}</title>
 </head>
 <body>
-    <h1> Новая статья от автора {{ post.author }} из категории {{ post.category }}</h1>
+    <h1> Здравствуйте, {{ user }}, на новостном портале появилась новая статья от автора {{ post.author }} из категории {{ post.category }}</h1>
     <p> {{ text }} </p>
 
     <p><a href="http://127.0.0.1:8000{{ post.get_absolute_url }}">Перейти на статью</a></p>

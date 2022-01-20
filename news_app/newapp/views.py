@@ -9,7 +9,12 @@ from .filters import NewsFilter
 from .forms import NewsForm
 from .models import Post, Category
 
+
+
 # дженерик для главной страницы
+from .tasks import send_mail_for_sub_test
+
+
 class NewsList(ListView):
     model = Post  # (2)
     template_name = 'news_list.html'
@@ -92,7 +97,7 @@ class NewsDelete(DeleteView):
 @login_required
 def add_subscribe(request, **kwargs):
     pk = request.GET.get('pk', )
-    # print('Пользователь', request.user, 'добавлен в подписчики категории:', Category.objects.get(pk=pk))
+    print('Пользователь', request.user, 'добавлен в подписчики категории:', Category.objects.get(pk=pk))
     Category.objects.get(pk=pk).subscribers.add(request.user)
     return redirect('/news/')
 
@@ -118,6 +123,88 @@ class ChangeNews(PermissionRequiredMixin, NewsEdit):
 
 class DeleteNews(PermissionRequiredMixin, NewsDelete):
     permission_required = ('newapp.delete_post',)
+
+
+# функция рассылки писем при добавлении новой статьи
+def send_mail_for_sub(instance):
+    print('Представления - начало')
+    print()
+    print()
+    print('====================ПРОВЕРКА СИГНАЛОВ===========================')
+    print()
+    print('задача - отправка письма подписчикам при добавлении новой статьи')
+
+    sub_text = instance.text
+    # получаем нужный объект модели Категория через рк Пост
+    category = Category.objects.get(pk=Post.objects.get(pk=instance.pk).category.pk)
+    print()
+    print('category:', category)
+    print()
+    subscribers = category.subscribers.all()
+
+    # для удобства вывода инфы в консоль, никакой важной функции не несет
+    print('Адреса рассылки:')
+    for qaz in subscribers:
+        print(qaz.email)
+
+    print()
+    print()
+    print()
+    for subscriber in subscribers:
+        # для удобства вывода инфы в консоль, никакой важной функции не несет
+        print('**********************', subscriber.email, '**********************')
+        print(subscriber)
+        print('Адресат:', subscriber.email)
+
+        html_content = render_to_string(
+            'mail.html', {'user': subscriber, 'text': sub_text[:50], 'post': instance})
+
+        sub_username = subscriber.username
+        sub_useremail = subscriber.email
+
+        # msg = EmailMultiAlternatives(
+        #     subject=f'Здравствуй, {subscriber.username}. Новая статья в вашем разделе!',
+        #     from_email='factoryskill@yandex.ru',
+        #     to=[subscriber.email]
+        # )
+        #
+        # msg.attach_alternative(html_content, 'text/html')
+
+        # для удобства вывода инфы в консоль
+        print()
+        print(html_content)
+        print()
+
+        send_mail_for_sub_test.delay(sub_username, sub_useremail, html_content)
+
+
+
+        # код ниже временно заблокирован, чтоб пока в процессе отладки не производилась реальная рассылка писем
+        # msg.send()
+
+    print('Представления - конец')
+
+    return redirect('/news/')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #
 #

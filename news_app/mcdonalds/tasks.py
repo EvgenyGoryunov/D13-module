@@ -2,7 +2,7 @@ import instance
 from celery import shared_task
 import time
 
-from newapp.tasks import send_mail_for_sub
+# from newapp.tasks import send_mail_for_sub
 
 
 @shared_task
@@ -22,5 +22,5 @@ def printer(N):
 def send_mail_for_sub_test():
     # time.sleep(10)
     print("Посылка письма, проверка111")
-    send_mail_for_sub(instance)
+    # send_mail_for_sub(instance)
     print("Посылка письма, проверка222")
