@@ -20,10 +20,10 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # от туда все задания, заупаскать их, и помещать в редис
 app.autodiscover_tasks()
 
+# для еженедельной рассылки настраиваем расписание запусков таски
 app.conf.beat_schedule = {
     'send_mail_every_monday_8am': {
         'task': 'newapp.tasks.send_mail_for_sub_every_week',
         'schedule': crontab(hour=8, minute=0, day_of_week='monday'),
-        # 'args': (agrs,),
     },
 }

@@ -6,6 +6,7 @@ from celery.schedules import crontab
 # таска для отправки писем подписчикам при создании новой
 @shared_task
 def send_mail_for_sub_once(sub_username, sub_useremail, html_content):
+    print('Таска_одно_письмо - старт')
     msg = EmailMultiAlternatives(
         subject=f'Здравствуй, {sub_username}. Новая статья в вашем разделе!',
         from_email='factoryskill@yandex.ru',
@@ -21,11 +22,13 @@ def send_mail_for_sub_once(sub_username, sub_useremail, html_content):
 
     # код ниже временно заблокирован, чтоб в процессе отладки не производилась реальная рассылка писем
     msg.send()
+    print('Таска_одно_письмо - конец')
 
 
 # таска для еженедельной рассылки писем
 @shared_task
 def send_mail_for_sub_every_week(sub_username, sub_useremail, html_content):
+    print('Таска_много_писем - старт')
     msg = EmailMultiAlternatives(
         subject=f'Здравствуй, {sub_username}, новые статьи за прошлую неделю в вашем разделе!',
         from_email='factoryskill@yandex.ru',
@@ -40,5 +43,6 @@ def send_mail_for_sub_every_week(sub_username, sub_useremail, html_content):
     print(html_content)
 
     # Чтобы запустить реальную рассылку нужно раскоментить нижнюю строчку
-    # msg.send()
+    msg.send()
+    print('Таска_много_писем - стоп')
 

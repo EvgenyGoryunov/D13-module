@@ -90,6 +90,7 @@ def news_sender():
             sub_username = subscriber.username
             sub_useremail = subscriber.email
 
+            # отправляем задачу в таску для еженедельной рассылки
             send_mail_for_sub_every_week(sub_username, sub_useremail, html_content)
 
             # msg = EmailMultiAlternatives(
