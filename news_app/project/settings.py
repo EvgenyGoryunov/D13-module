@@ -52,14 +52,7 @@ INSTALLED_APPS = [
     'django_apscheduler',
 
     # модуль Д7
-
-
-    # сделать под свое
-    # 'news_app'
-    # 'newapp.apps.newappConfig',
-    # 'newspaper.apps.NewspaperConfig',
     'mcdonalds'
-
 
 ]
 
@@ -67,7 +60,6 @@ DEFAULT_FROM_EMAIL = 'factoryskill@yandex.ru'
 
 # используется в случае, если данный проект управляет несколькими сайтами
 SITE_ID = 1
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,9 +72,6 @@ MIDDLEWARE = [
 
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
 
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
-    #
-    # 'basic.middlewares.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -105,6 +94,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
+# WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -137,9 +127,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
+# чтобы админ панель отображалась на русском языке
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'ru'  # для перевода на русский
 
+# часовой пояс (задано время - самара)
 TIME_ZONE = 'Europe/Samara'
 # TIME_ZONE = 'UTC'
 
@@ -148,7 +140,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # LOCALE_PATHS = [
 #     os.path.join(BASE_DIR, 'locale')
@@ -198,7 +189,6 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-
 # (1)
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
@@ -206,7 +196,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 # Чтобы allauth распознал нашу форму как ту, что должна выполняться вместо формы по умолчанию
 ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
-
 
 # Модуль Д6 - настройка отправки почты
 EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты для всех один и тот же всегда
@@ -223,7 +212,7 @@ ADMINS = [
     ('Yandex', 'ges300487@yandex.ru')
 ]
 
-MANAGERS =[
+MANAGERS = [
     ('Mail', 'ges1987@list.ru'),
     ('Yandex', 'ges300487@yandex.ru')
 ]
@@ -235,7 +224,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_AUTHENTIFICTION_METHOD = 'email'
 
-
 # Модуль 6.5 - действия по расписанию
 # формат даты, которую будет воспринимать наш задачник (вспоминаем модуль по фильтрам)
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
@@ -243,7 +231,6 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 # если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше,
 # но как правило, это сильно бьёт по производительности сервера
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
-
 
 # Модуль Д7 - Celery,Redis
 # указывает на URL брокера сообщений (Redis). По умолчанию он находится на порту 6379
@@ -269,11 +256,19 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 
+# Модуль Д8 - кэширование страничек сайта
+CACHES = {
+    'default': {
+        'TIMEOUT': 30,  # добавляем стандартное время ожидания в минуту (по умолчанию это 5 минут — 300 секунд)
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),  # BASE_DIR - значит папка проекта Указываем, куда
+        # будем сохранять кэшируемые файлы! Не забываем создать папку cache_files внутри папки с manage.py!
+    }
+}
+
 # (1)
 # Первые два указывают на то, что поле email является обязательным и уникальным, а третий, наоборот, говорит,
 # что username теперь необязательный. Следующий параметр указывает, что аутентификация будет происходить
 # посредством электронной почты. Напоследок мы указываем, что верификация почты отсутствует. Обычно на почту
 # отправляется подтверждение аккаунта, после подтверждения которого восстанавливается полная функциональность
 # учетной записи. Для тестового примера нам не обязательно это делать.
-
-

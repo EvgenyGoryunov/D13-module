@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+{% load cache %} <!-- Загружаем кэширование -->
+    {% cache 30 header %} <!-- Кэшируем отдельный блок на 30 секунд -->
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -15,7 +17,7 @@
 
 
         <!-- Core theme CSS (includes Bootstrap)-->
-        {% load static%}
+        {% load static %}
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     </head>
 
@@ -51,24 +53,24 @@
                             <a class="nav-link" href="http://127.0.0.1:8000/admin">AdminPanel</a>
                        </li>
 
-                       <li class="nav-item">
-                            <a class="nav-link" href="{% url 'make_appointment' %}">Appoint</a>
-                       </li>
+<!--                       <li class="nav-item">-->
+<!--                            <a class="nav-link" href="{% url 'make_appointment' %}">Appoint</a>-->
+<!--                       </li>-->
 
-                       <li class="nav-item">
-                            <a class="nav-link" href="http://127.0.0.1:8000/appointment/appoint/">Test</a>
-                       </li>
+<!--                       <li class="nav-item">-->
+<!--                            <a class="nav-link" href="http://127.0.0.1:8000/appointment/appoint/">Test</a>-->
+<!--                       </li>-->
 
-                      <li class="nav-item">
-                            <a class="nav-link" href="http://127.0.0.1:8000/mcdonalds/mcd">Mcdonalds</a>
-                       </li>
+<!--                      <li class="nav-item">-->
+<!--                            <a class="nav-link" href="http://127.0.0.1:8000/mcdonalds/mcd">Mcdonalds</a>-->
+<!--                       </li>-->
 
 
                    </ul>
                </div>
            </div>
         </nav>
-
+    {% endcache %}
         <!-- Page content-->
         <div class="container">
            <div class="row">
