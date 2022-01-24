@@ -11,6 +11,8 @@ from .models import Post, Category
 
 from .tasks import send_mail_for_sub_once
 
+from django.core.cache import cache # импортируем наш кэш
+
 
 # дженерик для главной страницы
 class NewsList(ListView):
@@ -61,6 +63,20 @@ class NewsDetail(DetailView):
         context['is_not_subscribe'] = not qwe.filter(subscribers__username=self.request.user).exists()
         context['is_subscribe'] = qwe.filter(subscribers__username=self.request.user).exists()
         return context
+
+    # переопределиние нашего кэша для того, чтобы страница новости кэшировались до тех пор, пока они не изменятся
+    def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
+        obj = cache.get(f'product-{self.kwargs["pk"]}', None)  # кэш очень похож на словарь, и метод get действует
+        # также. Он забирает значение по ключу, если его нет, то забирает None.
+
+        # если объекта нет в кэше, то получаем его и записываем в кэш
+        if not obj:
+            obj = super().get_object(*args, **kwargs)
+            cache.set(f'product-{self.kwargs["pk"]}', obj)
+
+        return obj
+
+
 
 
 # дженерик для создания объекта. Можно указать только имя шаблона и класс формы
