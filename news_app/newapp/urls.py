@@ -1,5 +1,4 @@
 from django.urls import path
-from django.views.decorators.cache import cache_page
 
 from .views import NewsList, NewsDetail, NewsSearch, AddNews, ChangeNews, DeleteNews, add_subscribe, \
     del_subscribe
@@ -8,7 +7,7 @@ urlpatterns = [
 
     # модуль Д4 - вывод инфы из БД, создание новостей, редактирование, удаление и прочее
     path('', NewsList.as_view(), name='news'),
-# cache_page(60*1)
+    # cache_page(60*1)
     path('search/', NewsSearch.as_view(), name='news_search'),
 
     # модуль Д8 - кэширование страничек о деталях новостей
@@ -16,7 +15,7 @@ urlpatterns = [
     # cache_page(60*10) - 60 секунд * 5 (=5 минутам, то есть 5 раз по 60 секунд)
     path('<int:pk>/', NewsDetail.as_view(), name='news_detail'),
     # path('<int:pk>/', (ProductDetailView.as_view()), name='product_detail'),
-# cache_page(60*5)
+    # cache_page(60*5)
 
     # модуль Д5 - регистрация пользователей, ограничение прав доступа к сайту (1)
     path('add/', AddNews.as_view(), name='news_add'),
