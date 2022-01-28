@@ -51,8 +51,6 @@ INSTALLED_APPS = [
     'appointments.apps.AppointmentConfig',
     'django_apscheduler',
 
-    # модуль Д7
-    'mcdonalds'
 
 ]
 
