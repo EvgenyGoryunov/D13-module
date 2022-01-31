@@ -9,8 +9,8 @@ from .views import send_mail_for_sub
 # запускает выполнение кода при каком-либо действии пользователя, в нашем случае -
 # создание новой новости и сохранение ее в БД модели Post записи
 
-@receiver(post_save, sender=Post)
+# @receiver(post_save, sender=Post)
 def send_sub_mail(sender, instance, created, **kwargs):
-    print('Сигнал - начало')
+    # print('Сигнал - начало')
     send_mail_for_sub(instance)
-    print('Сигнал - конец')
+    # print('Сигнал - конец')
