@@ -67,7 +67,7 @@ class Category(models.Model):
 # Модель статьй и новостей
 class Post(models.Model):
     # связь «один ко многим» с моделью Author;
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, default="John", verbose_name='Автор (author)')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, default="John", verbose_name='Автор')
 
     # поле с выбором — «статья» или «новость»;
     NEWS = 'NW'
@@ -80,10 +80,10 @@ class Post(models.Model):
                                     verbose_name='Категория(categoryType)')
 
     # автоматически добавляемая дата и время создания;
-    dateCreation = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания(dateCreation)')
+    dateCreation = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, default="Nature",
-                                 verbose_name='Категория(category)')
+                                 verbose_name='Категория')
 
     # заголовок статьи/новости;
     title = models.CharField(max_length=128, verbose_name='Название(title)')

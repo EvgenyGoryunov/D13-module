@@ -17,11 +17,11 @@
 {% if is_not_subscribe %}
 <!--GET запрос, который передает в наше представление значение категории, переменная post.category.id, -->
 <!--которая в дальнейшем необходима для добавления подписчиков-->
-<button><a href="add_subscribe/?pk={{ post.category.id }}">ПодПиска :)</a></button>
+<button><a href="add_subscribe/?pk={{ post.category.id }}">Подписка</a></button>
 {% endif %}
 
 {% if is_subscribe %}
-<button><a href="del_subscribe/?pk={{ post.category.id }}">ОтПиска :)</a></button>
+<button><a href="del_subscribe/?pk={{ post.category.id }}">Отписка</a></button>
 {% endif %}
 
 <hr>

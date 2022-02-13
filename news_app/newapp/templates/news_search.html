@@ -15,52 +15,36 @@
     <input type="submit" value="Найти">
 </form>
 <br>
-<br>
-<hr>
-<hr>
-
-{% for post in filter.qs %}
-<br>
-<br>
-<h3><a href="{% url 'news_detail' post.id %}"><u>{{ post }}</u></a>
-</h3> <!-- При нажатии на имя нас теперь будет перекидывать на страницу с самого товара -->
-<br>
-<br>
-<h6>{{ post.text | truncatechars:250 }}</h6>
-<br>
-- новость №{{ post.pk }}; автор: {{ post.author }}; категория: {{ post.category }}; дата создания: {{ post.dateCreation }} -
-<br>
-<br>
-<hr>
-<hr>
-
-{% endfor %}
 
 
-<!-- Проверяем что поддерживается постраничный вывод -->
-{% if is_paginated %}
+  <table cellspacing="5" cellpadding="10" border="1" style=" border-spacing : 10px; border-color : blue; border-style: solid;" bgcolor="FFFFFF">
+        <tr>
+            <td width="400">
+                <h5>Название</h5>
+            </td>
+            <td width="130">
+                <h5>Дата</h5>
+            </td>
+            <td>
+                <h5>Содержание</h5>
+            </td>
+        </tr>
+    {% for post in filter.qs %}
+        <tr>
+            <td>
+                <p align="left"><a href="{% url 'news_detail' post.id %}"><u>{{ post|truncatechars:60 }}</u></a></p>
+            </td>
 
-<!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
-{% if page_obj.has_previous %}
-<a href="?page=1">First</a>
-<a href="?page={{ page_obj.previous_page_number }}"><<<</a>
-{% endif %}
+            <td>
+                <p align="center">{{ post.dateCreation |date:"d M Y" }}</p>
+            </td>
+            <td>
+                <p align="left">{{ post.text|truncatewords:20 }}</p>
+            </td>
+        </tr>
+  {% endfor %}
+</table>
 
-<!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
-{% for num in page_obj.paginator.page_range %}
-{% if page_obj.number == num %}
-<a>{{ num }}</a>
-{% elif num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
-<a href="?page={{ num }}">{{ num }}</a>
-{% endif %}
-{% endfor %}
-
-<!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
-{% if page_obj.has_next %}
-<a href="?page={{ page_obj.next_page_number }}">>>></a>
-<a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-{% endif %}
-{% endif %}
 <br>
 <hr>
 

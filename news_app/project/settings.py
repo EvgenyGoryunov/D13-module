@@ -12,7 +12,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ih%n$n4g-&dyjs0nlo1u^+=6^@q!mtqmka8hy8r+r1lmpb6f5t'
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
 DEBUG = True
@@ -54,7 +53,6 @@ INSTALLED_APPS = [
     'appointments.apps.AppointmentConfig',
     'django_apscheduler',
 
-
 ]
 
 DEFAULT_FROM_EMAIL = 'factoryskill@yandex.ru'
@@ -95,17 +93,31 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
-# WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
+# Прошлая база данных
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# Модуль Д12 - база данных postgreSQL (пустая, поэтому отключена)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': '123',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     },
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -164,7 +176,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / "newapp/static"
 ]
-
 
 # для модуля Д5 (прошлая версия ссылки)
 
@@ -255,7 +266,6 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 # формат данных, метод сериализации результатов
 CELERY_RESULT_SERIALIZER = 'json'
-
 
 # Модуль Д8 - кэширование страничек сайта
 CACHES = {
