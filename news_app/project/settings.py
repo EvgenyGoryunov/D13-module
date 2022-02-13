@@ -280,28 +280,62 @@ CACHES = {
     }
 }
 
-# Модуль Д13 - логирование всего нужного
+#
+# Модуль Д13 - логирование
+# 1 - (без изменений) просто единица
+# 2 - без изменений (контролирует работу существующей схемы логирования Django)
+# 3 - варианты (форматы) вывода информации (сообщений)
+# 4 - для уровня дебага делаем вывод инфы
+# (asctime) - время возникновения сообщения
+# (levelname) - уровень логирования
+# (module) - модуль-источник сообщения
+# (message) - само сообщени
+# (process) - процесс
+# (thread) - поток, в которых оно возникло сообщений
+# (pathname) - путь к источнику события
+# (exc_info) - стэк ошибки
+# 5 - фильтр, который пропускает сообщения в зависимости от состояния переменной DEBUG, например, если она
+# (DEBUG = True), то выводить сообщения и т.д.
+# 6 - хендлер, то есть обработчик, когда мы получили сообщение, обработчик может вывести его в
+# соответствии с форматом, фильтрами, уровнями либо в консоль, либо записать в файл, либо отправить по почте
+
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'debug_console': {
-            'format': '%(asctime)s %(levelname)s %(message)s'
+    'version': 1,  # 1
+    'disable_existing_loggers': False,  # 2
+    'formatters': {  # 3
+
+        # 1-3 пункт задания
+        # для уровня DEBUG - время, уровень логирования, сообщение
+        'debug_console': {  # 4
+            # 'format': '{asctime} :: {levelname} -- {message}',
+            'format': '%(asctime)s %(levelname)s %(pathname)s %(message)s',
         },
+        # для уровня WARNING - время, уровень логирования, путь к событию, сообщение
         'warning_console': {
             'format': '%(asctime)s %(levelname)s %(pathname)s %(message)s'
         },
+
+        # 3 пункт задания
+        # для уровней ERROR и CRITICAL - время, уровень логирования, путь к событию, сообщение, стэк ошибки
+        # для файла errors.log
         'error_critical': {
             'format': '%(asctime)s %(levelname)s %(message)s %(pathname)s %(exc_info)s'
         },
+
+        # 2-4 пункт задания - время, уровень логирования, модуль, сообщение
+        # для файлов general.log и security.log
         'general_security_log': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+            'format': '%(asctime)s %(levelname)s %(module)s %(message)s'
         },
+
+        # 5 пункт задания - время, уровень логирования, путь к событию, сообщение
+        # для уровня ERROR, для отправки по почте
         'mail_log': {
-            'format': '%(asctime)s %(levelname)s %(message)s %(pathname)s'
+            'format': '%(asctime)s %(levelname)s %(pathname)s %(message)s'
         }
     },
-    'filters': {
+
+    'filters': {  # 5
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
@@ -309,7 +343,11 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse',
         },
     },
-    'handlers': {
+
+    'handlers': {  # 6
+
+        # 1 пункт задания - уровень DEBUG, фильтр DEBUG = True везде, кроме отправки по почте и
+        # записи в файл general.log
         'console_debug': {
             'level': 'DEBUG',
             'filters': ['require_debug_true'],
@@ -322,6 +360,8 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'warning_console'
         },
+
+        # 2 пункт задания, уровень INFO, фильтр DEBUG = False
         'file_general': {
             'level': 'INFO',
             'filters': ['require_debug_false'],
@@ -329,53 +369,75 @@ LOGGING = {
             'filename': 'general.log',
             'formatter': 'general_security_log'
         },
+
+        # 4 пункт задания, уровень INFO
         'file_security': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'security.log',
             'formatter': 'general_security_log'
         },
+
+        # 3 пункт задания - уровень ERROR, вывод в файл errors.log
         'file_errors': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
             'filename': 'errors.log',
             'formatter': 'error_critical'
         },
+
+        # 3 пункт задания - уровень CRITICAL, вывод в файл errors.log
         'file_critical': {
             'level': 'CRITICAL',
             'class': 'logging.FileHandler',
             'filename': 'errors.log',
             'formatter': 'error_critical'
         },
+
+        # 5 пункт задания - уровень ERROR, отправка по почте
         'mail_admin': {
             'level': 'ERROR',
+            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
             'formatter': 'mail_log'
         }
     },
-    'loggers': {
+
+    'loggers': {  # 6 формируем логеров
+
+        # 1, 2 пункт задания
         'django': {
             'handlers': ['console_debug', 'console_warning', 'file_general'],
             'propagate': True,
         },
-        'django.request': {
-            'handlers': ['file_errors', 'file_critical', 'mail_admin'],
-            'propagate': True,
-        },
-        'django.server': {
-            'handlers': ['file_errors', 'file_critical', 'mail_admin'],
-            'propagate': True,
-        },
+
+        # 3 пункт задания
         'django.template': {
             'handlers': ['file_errors', 'file_critical'],
             'propagate': True,
         },
+
+        # 3 пункт задания
         'django.db_backends': {
             'handlers': ['file_errors', 'file_critical'],
             'propagate': True,
         },
+
+        # 4 пункт задания
         'django.security': {
             'handlers': ['file_security'],
+            'propagate': True,
+        },
+
+        # 5, 3 пункт задания
+        'django.request': {
+            'handlers': ['file_errors', 'file_critical', 'mail_admin'],
+            'propagate': True,
+        },
+
+        # 5, 3 пункт задания
+        'django.server': {
+            'handlers': ['file_errors', 'file_critical', 'mail_admin'],
             'propagate': True,
         }
     }
